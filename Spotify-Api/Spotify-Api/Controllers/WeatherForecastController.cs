@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
 namespace Spotify_Api.Controllers
 {
     [ApiController]
+    [Authorize(policy: "Spotify")]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
@@ -22,6 +24,7 @@ namespace Spotify_Api.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            var test = HttpContext.Request.Headers.Authorization;
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
                 {
                     Date = DateTime.Now.AddDays(index),
