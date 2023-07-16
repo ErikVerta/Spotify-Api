@@ -19,7 +19,7 @@ namespace Spotify_Api.Controllers
         }
 
         [HttpGet("callback")]
-        public async Task<ActionResult<string>> GetToken([FromQuery] string code, [FromQuery] string state)
+        public async Task<ActionResult<string>> Callback([FromQuery] string code, [FromQuery] string state)
         {
             var response = await new OAuthClient().RequestToken(
                 new AuthorizationCodeTokenRequest(Configuration["Spotify:SPOTIFY_CLIENT_ID"],
@@ -41,6 +41,19 @@ namespace Spotify_Api.Controllers
             };
             var uri = loginRequest.ToUri();
             return Redirect(uri.ToString());
+        }
+
+        [HttpGet("refresh_token")]
+        public async Task<ActionResult<string>> RefreshToken([FromQuery] string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+                return BadRequest("refresh_token is null or empty.");
+
+            var response = await new OAuthClient().RequestToken(
+                new AuthorizationCodeRefreshRequest(Configuration["Spotify:SPOTIFY_CLIENT_ID"],
+                    Configuration["Spotify:SPOTIFY_CLIENT_SECRET"], refreshToken));
+
+            return Ok(JsonSerializer.Serialize(response));
         }
     }
 }
