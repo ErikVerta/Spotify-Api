@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyAPI.Web;
 
@@ -36,7 +33,7 @@ namespace Spotify_Api.Controllers
                 Configuration["Spotify:SPOTIFY_CLIENT_ID"],
                 LoginRequest.ResponseType.Code)
             {
-                Scope = new[] {Scopes.PlaylistReadPrivate, Scopes.PlaylistReadCollaborative},
+                Scope = new[] {Scopes.PlaylistReadPrivate, Scopes.PlaylistReadCollaborative, Scopes.UserTopRead},
                 State = Guid.NewGuid().ToString()
             };
             var uri = loginRequest.ToUri();
