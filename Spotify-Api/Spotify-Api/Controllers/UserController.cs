@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Spotify_Api.Services;
 using SpotifyAPI.Web;
 
 namespace Spotify_Api.Controllers
 {
     [ApiController]
+    [Authorize("Spotify")]
     [Route("[controller]")]
     public class UserController : Controller
     {
@@ -18,15 +21,14 @@ namespace Spotify_Api.Controllers
         }
 
         [HttpGet("me/top/artists/latest/releases")]
-        public async Task<ActionResult<IEnumerable<SimpleAlbum>>> GetUsersTopArtistsLatestReleases(
-            [FromQuery] string accessToken)
+        public async Task<ActionResult<IEnumerable<SimpleAlbum>>> GetUsersTopArtistsLatestReleases()
         {
             try
             {
-                var fullArtists = await UserService.GetUsersTopArtistsAsync(accessToken);
+                var fullArtists = await UserService.GetUsersTopArtistsAsync();
 
                 var simpleAlbumsTasks = fullArtists.Select(async artist =>
-                    await ArtistService.GetArtistsAlbumsAsync(accessToken, artist.Id));
+                    await ArtistService.GetArtistsAlbumsAsync(artist.Id));
 
                 var simpleAlbums = await Task.WhenAll(simpleAlbumsTasks);
                 var latestReleases =
