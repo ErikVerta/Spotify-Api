@@ -1,5 +1,2 @@
 # Spotify-Api
-This Api is used to retrieve data from the logged in user.
-
-## Usage
-To retrieve a spotiy token you need to make a request to the /auth/login endpoint. You will then be redirected to spotify and be promted to login. When the login is succesfull you will get a response containing the spotify token.
+This Api is used to retrieve data from the logged in user. When a request is made the auth middleware checks if there is a valid auth cookie, if not it will redirect to Spotify and request the user to log in.
