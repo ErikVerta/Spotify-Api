@@ -18,15 +18,14 @@ namespace Spotify_Api.Controllers
         }
 
         [HttpGet("me/top/artists/latest/releases")]
-        public async Task<ActionResult<IEnumerable<SimpleAlbum>>> GetUsersTopArtistsLatestReleases(
-            [FromQuery] string accessToken)
+        public async Task<ActionResult<IEnumerable<SimpleAlbum>>> GetUsersTopArtistsLatestReleases()
         {
             try
             {
-                var fullArtists = await UserService.GetUsersTopArtistsAsync(accessToken);
+                var fullArtists = await UserService.GetUsersTopArtistsAsync();
 
                 var simpleAlbumsTasks = fullArtists.Select(async artist =>
-                    await ArtistService.GetArtistsAlbumsAsync(accessToken, artist.Id));
+                    await ArtistService.GetArtistsAlbumsAsync(artist.Id));
 
                 var simpleAlbums = await Task.WhenAll(simpleAlbumsTasks);
                 var latestReleases =
